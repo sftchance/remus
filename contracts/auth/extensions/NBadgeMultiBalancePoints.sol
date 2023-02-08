@@ -5,7 +5,7 @@ pragma solidity ^0.8.17;
 /// @dev Core dependencies.
 import {IERC1155} from "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-/// @notice Drives an authentication framework using many collections and optional token ids 
+/// @notice Drives an authentication framework using many collections and optional token ids
 ///         to create a cumulative points system.
 /// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/extensions/NBadgeMultiBalancePoints.sol)
 contract NBadgeMultiBalancePoints {
