@@ -47,7 +47,7 @@ abstract contract NBadgeAuth {
     modifier requiresAuth(bytes32 _key) {
         /// @dev Determine if this user is authorized to make this call.
         require(
-            isAuthorized(msg.sender, msg.sig, _key),
+            _isAuthorized(msg.sender, msg.sig, _key),
             "BadgeAuth: Not authorized to call this function."
         );
         _;
@@ -89,26 +89,6 @@ abstract contract NBadgeAuth {
     }
 
     ////////////////////////////////////////////////////////
-    ///                     GETTERS                      ///
-    ////////////////////////////////////////////////////////
-
-    function isAuthorized(
-        address _caller,
-        bytes4 _sig,
-        bytes32 _key
-    ) internal view returns (bool) {
-        /// @dev Pull the authority out of storage.
-        NBadgeAuthority auth = authority;
-
-        /// @dev Determine if the user has permission to make this call.
-        /// @notice Must pass the authority check or be the `owner`.
-        return
-            (address(auth) != address(0) &&
-                auth.canCall(_caller, address(this), _sig, _key)) ||
-            _caller == owner;
-    }
-
-    ////////////////////////////////////////////////////////
     ///                 INTERNAL SETTERS                 ///
     ////////////////////////////////////////////////////////
 
@@ -132,9 +112,34 @@ abstract contract NBadgeAuth {
 
         emit AuthorityChanged(msg.sender, _authority);
     }
+
+    ////////////////////////////////////////////////////////
+    ///                 INTERNAL GETTERS                 ///
+    ////////////////////////////////////////////////////////
+
+    function _isAuthorized(
+        address _caller,
+        bytes4 _sig,
+        bytes32 _key
+    ) internal view returns (bool) {
+        /// @dev Pull the authority out of storage.
+        NBadgeAuthority auth = authority;
+
+        /// @dev Determine if the user has permission to make this call.
+        /// @notice Must pass the authority check or be the `owner`.
+        return
+            (address(auth) != address(0) &&
+                auth.canCall(_caller, address(this), _sig, _key)) ||
+            _caller == owner;
+    }
+
 }
 
 interface NBadgeAuthority {
+    ////////////////////////////////////////////////////////
+    ///                     SCHEMA                       ///
+    ////////////////////////////////////////////////////////
+
     /// @dev A permission to access a function.
     struct Permission {
         bool isPublic;
@@ -149,6 +154,10 @@ interface NBadgeAuthority {
         bytes32 key;
         Permission permission;
     }
+
+    ////////////////////////////////////////////////////////
+    ///                     GETTERS                      ///
+    ////////////////////////////////////////////////////////
 
     /**
      * @dev Determine if a user has permission to access a function.
