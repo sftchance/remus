@@ -3,21 +3,22 @@
 pragma solidity ^0.8.17;
 
 /** 
-    contract JourneyFactory is NBadgeAuth {
-        bytes32 public constant PIN_KEY = keccak256("pin");
-        bytes32 public constant WITHDRAW_KEY = keccak256("withdraw");
+    import {NBadgeAuth, NBadgeAuthority} from "../NBadgeAuth.sol";
 
-        constructor(Permission[] memory permissions) NBadgeAuth(msg.sender, BadgeAuthority(0x.00)) {
+    contract JourneyFactory is NBadgeAuth {
+        bytes32 public constant ADMIN = keccak256("ADMIN");
+
+        constructor(Permission[] memory permissions) NBadgeAuth(msg.sender, NBadgeAuthority(0x.00)) {
             for (uint256 i = 0; i < permissions.length; i++) {
                 _setPermission(permission);
             }
         }
 
-        function pinJourney(Journey memory journey) external requiresAuth(PIN_KEY) { 
+        function pinJourney(Journey memory journey) external { 
             /// ...
         }
 
-        function withdrawFunds() external requiresAuth(WITHDRAW_KEY) { 
+        function withdrawFunds() external requiresAuth(ADMIN) { 
             /// ...
         }
     }
