@@ -2,8 +2,6 @@
 
 pragma solidity ^0.8.17;
 
-import {INBadgeAuthority} from "../interfaces/INBadgeAuthority.sol";
-
 /** 
     contract JourneyFactory is NBadgeAuth {
         bytes32 public constant PIN_KEY = keccak256("pin");
@@ -25,7 +23,9 @@ import {INBadgeAuthority} from "../interfaces/INBadgeAuthority.sol";
     }
 */
 
-contract NBadgeRegistry is INBadgeAuthority {
+import {NBadgeAuth, NBadgeAuthority} from "../NBadgeAuth.sol";
+
+contract NBadgeRegistry is NBadgeAuthority {
     ////////////////////////////////////////////////////////
     ///                     STATE                        ///
     ////////////////////////////////////////////////////////
@@ -69,17 +69,7 @@ contract NBadgeRegistry is INBadgeAuthority {
     ////////////////////////////////////////////////////////
 
     /**
-     * @dev Determine if a user has permission to access a function.
-     * @notice This function includes user-defined `_sender` to enable
-     *         cross-protocol and cross-network permissions. This means,
-     *         that if an organization already has a permission policy
-     *         deployed there is no need to duplicate that configuration.
-     * @param _caller The user who is trying to access the function.
-     * @param _sender The source contract of the transaction.
-     * @param _target The target contract of the function (optional).
-     * @param _sig The signature of the function (optional).
-     * @param _key The key of the permission in the schema (optional).
-     * @return can True if the user has permission, false otherwise.
+     * See {INBadgeAuthority-canCall (full)}.
      */
     function canCall(
         address _caller,
@@ -108,12 +98,7 @@ contract NBadgeRegistry is INBadgeAuthority {
     }
 
     /**
-     * @dev Determine if a user has permission to access a function.
-     * @param _caller The user who is trying to access the function.
-     * @param _target The target contract of the function (optional).
-     * @param _sig The signature of the function (optional).
-     * @param _key The key of the permission in the schema (optional).
-     * @return can True if the user has permission, false otherwise.
+     * See {INBadgeAuthority-canCall (overloaded)}.
      */
     function canCall(
         address _caller,
@@ -121,7 +106,8 @@ contract NBadgeRegistry is INBadgeAuthority {
         bytes4 _sig,
         bytes32 _key
     ) public view override returns (bool can) {
-        can = canCall(_caller, msg.sender, _target, _sig, _key);
+        /// @dev Call the built overloaded function.
+        can = canCall(_caller, address(this), _target, _sig, _key);
     }
 
     ////////////////////////////////////////////////////////
@@ -156,6 +142,7 @@ contract NBadgeRegistry is INBadgeAuthority {
         view
         returns (bytes32)
     {
+        /// @dev Determine what the key for the refernece is.
         return
             _keyReference(
                 msg.sender,
