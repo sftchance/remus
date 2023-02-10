@@ -5,11 +5,11 @@ pragma solidity ^0.8.17;
 import {INBadgeAuthority} from "../interfaces/INBadgeAuthority.sol";
 
 /** 
-    contract JourneyFactory is BadgeAuth {
+    contract JourneyFactory is NBadgeAuth {
         bytes32 public constant PIN_KEY = keccak256("pin");
         bytes32 public constant WITHDRAW_KEY = keccak256("withdraw");
 
-        constructor(Permission[] memory permissions) BadgeAuth(msg.sender, BadgeAuthority(0x.00)) {
+        constructor(Permission[] memory permissions) NBadgeAuth(msg.sender, BadgeAuthority(0x.00)) {
             for (uint256 i = 0; i < permissions.length; i++) {
                 _setPermission(permission);
             }
