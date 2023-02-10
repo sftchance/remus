@@ -19,7 +19,7 @@ metatx
 ├─ ⏳ DiscreteBadgingForwarder - "Forwarder contract that mints a Badge upon execution of specific transactions."
 tokens
 ├─ ERC20
-|  ├─ ⏳ ERC20Generational - "Birth and death to immulate culture volatility."
+|  ├─ ⏳ ERC20Generational - "Birth and death to emulate culture volatility."
 ├─ ERC721
 |  ├─ ⏳ ERC721Explosive - "Explode an NFT into thousands of children NFTs with the ability to reassemble."
 |  ├─ ⏳ ERC721Hooked - "Non-fungible token with transfer-hooks enabling external state updates."
