@@ -26,13 +26,17 @@ pragma solidity ^0.8.17;
 
 import {NBadgeAuth, NBadgeAuthority} from "../NBadgeAuth.sol";
 
-contract NBadgeRegistry is NBadgeAuthority {
+contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ////////////////////////////////////////////////////////
     ///                     STATE                        ///
     ////////////////////////////////////////////////////////
 
     /// @dev Save the permission references for each contract.
     mapping(address => mapping(bytes32 => Reference)) public references;
+
+    constructor(address _authority)
+        NBadgeAuth(msg.sender, NBadgeAuthority(_authority))
+    {}
 
     ////////////////////////////////////////////////////////
     ///                    SETTERS                       ///
@@ -93,8 +97,7 @@ contract NBadgeRegistry is NBadgeAuthority {
                 _caller,
                 _target,
                 _sig,
-                _key,
-                permissionReference.permission.config
+                _key
             ));
     }
 
@@ -108,7 +111,7 @@ contract NBadgeRegistry is NBadgeAuthority {
         bytes32 _key
     ) public view override returns (bool can) {
         /// @dev Call the built overloaded function.
-        can = canCall(_caller, address(this), _target, _sig, _key);
+        can = canCall(_caller, msg.sender, _target, _sig, _key);
     }
 
     ////////////////////////////////////////////////////////
