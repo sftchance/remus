@@ -1,6 +1,6 @@
 # 🐺🐺 Remus 
 
-This is my city, a collection of semi-opinionated, lightweight, and build-ready EVM primitives for smart contract development. When Romulus and Remus became adults, they decided to found a city where the wolf had found them.
+When Romulus and Remus became adults, they decided to found a city where the wolf had found them. This is my city, a collection of semi-opinionated, lightweight, and build-ready EVM primitives for smart contract development.
 
 ```ml
 auth

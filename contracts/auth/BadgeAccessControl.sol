@@ -86,7 +86,7 @@ abstract contract BadgeAccessControl {
         BadgeData memory badge = _roles[_role].badge;
 
         /// @dev Determine if the balance has been satisfied.
-        return badge.token.balanceOf(_account, badge.tokenId) > badge.balance;
+        return badge.token.balanceOf(_account, badge.tokenId) >= badge.balance;
     }
 
     /**
