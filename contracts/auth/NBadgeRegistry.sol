@@ -24,7 +24,7 @@ pragma solidity ^0.8.17;
     }
 */
 
-import {NBadgeAuth, NBadgeAuthority} from "../NBadgeAuth.sol";
+import {NBadgeAuth, NBadgeAuthority} from "./NBadgeAuth.sol";
 
 contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ////////////////////////////////////////////////////////
