@@ -14,6 +14,9 @@ auth
 ├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
 math
 ├─ ⏳ MathlessCurves - "Shapeless curves for the EVM using Fourier series."
+metatx
+├─ ⏳ BadgingForwarder - "Forwarder contract that mints a Badge upon transaction execution."
+├─ ⏳ DiscreteBadgingForwarder - "Forwarder contract that mints a Badge upon execution of specific transactions."
 tokens
 ├─ ERC20
 |  ├─ ⏳ ERC20Generational - "Birth and death to immulate culture volatility."
@@ -22,6 +25,8 @@ tokens
 |  ├─ ⏳ ERC721Hooked - "Non-fungible token with transfer-hooks enabling external state updates."
 |  ├─ ⏳ ERC721Mirror - "Ghost-ownership implementation to efficiently airdrop an entire ERC721 collection."
 |  ├─ ⏳ ERC721Receivable - "Mint tokens upon the receipt of ETH, ERC20, ERC721 or ERC1155."
+├─ ERC1155
+|  ├─ ⏳ ERC1155Throttled - "Implement a throttled-to-cooldown state on token minting when activity exceeds a maximum.
 ```
 
 ## Safety
