@@ -4,14 +4,14 @@ This is my city, a collection of semi-opinionated, lightweight, and build-ready 
 
 ```ml
 auth
+├─ ✅ BadgeAccessControl - "Variant of AccessControl using ERC1155 Badges."
 ├─ ✅ Fingerprint - "Access control powered by fingerprinted tokens."
 ├─ 🚨 NBadgeAuth - "Access control powered by complex uses of ERC1155 Badges."
+├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
 ├─ extensions
 |  ├─ ✅ NBadgeIdPacked - "Gating by multiple token ids of a single Badge collection."
 |  ├─ ✅ NBadgeMultiBalance - "Simple gating by a cumulative balance of Badges held."
 |  ├─ ✅ NBadgeMultiBalancePoints - "Complex gating by a cumulative point-driven system based on Badges held."
-├─ registry
-├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
 math
 ├─ ⏳ MathlessCurves - "Shapeless curves for the EVM using Fourier series."
 metatx

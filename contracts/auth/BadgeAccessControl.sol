@@ -2,13 +2,17 @@
 
 pragma solidity ^0.8.17;
 
+/// @dev Core dependencies.
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 
-contract BadgeAccessControl {
+/// @notice Module that allows children to implement access control based on ERC1155 badges.
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/BadgeAccessControl.sol)
+abstract contract BadgeAccessControl {
     ////////////////////////////////////////////////////////
     ///                     SCHEMA                       ///
     ////////////////////////////////////////////////////////
 
+    /// @dev Schema for a badge token.
     struct BadgeData {
         Badge token;
         uint256 tokenId;
@@ -147,7 +151,7 @@ contract BadgeAccessControl {
      * @param _a The first badge data structure.
      * @param _b The second badge data structure.
      * @return True if the badge data structures are equal, false otherwise.
-     */    
+     */
     function _equals(BadgeData memory _a, BadgeData memory _b)
         internal
         pure
@@ -193,6 +197,10 @@ contract BadgeAccessControl {
 }
 
 interface Badge {
+    ////////////////////////////////////////////////////////
+    ///                     GETTERS                      ///
+    ////////////////////////////////////////////////////////
+
     /**
      * @dev Returns the amount of tokens owned by `_account`.
      * @param _account The address to query the balance of.
