@@ -2,28 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-/** 
-    import {NBadgeAuth, NBadgeAuthority} from "../NBadgeAuth.sol";
-
-    contract JourneyFactory is NBadgeAuth {
-        bytes32 public constant ADMIN = keccak256("ADMIN");
-
-        constructor(Permission[] memory permissions) NBadgeAuth(msg.sender, NBadgeAuthority(0x.00)) {
-            for (uint256 i = 0; i < permissions.length; i++) {
-                _setPermission(permission);
-            }
-        }
-
-        function pinJourney(Journey memory journey) external { 
-            /// ...
-        }
-
-        function withdrawFunds() external requiresAuth(ADMIN) { 
-            /// ...
-        }
-    }
-*/
-
+/// @dev Core dependencies.
 import {NBadgeAuth, NBadgeAuthority} from "./NBadgeAuth.sol";
 
 contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
@@ -31,8 +10,23 @@ contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ///                     STATE                        ///
     ////////////////////////////////////////////////////////
 
-    /// @dev Save the permission references for each contract.
-    mapping(address => mapping(bytes32 => Reference)) public references;
+    /// @dev The defined module-state active in the registry.
+    mapping(bytes32 => NBadgeAuthority) public modules;
+
+    ////////////////////////////////////////////////////////
+    ///                     EVENTS                       ///
+    ////////////////////////////////////////////////////////
+
+    /// @dev Announces when a module is added or removed.
+    event ModuleChanged(
+        address indexed user,
+        NBadgeAuthority indexed prevModule,
+        NBadgeAuthority indexed module
+    );
+
+    ////////////////////////////////////////////////////////
+    ///                  CONSTRUCTOR                     ///
+    ////////////////////////////////////////////////////////
 
     constructor(address _authority)
         NBadgeAuth(msg.sender, NBadgeAuthority(_authority))
@@ -43,30 +37,16 @@ contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ////////////////////////////////////////////////////////
 
     /**
-     * @dev Set a function as permission-gated.
-     * @param _reference The reference to the function.
+     * @dev Set the module-state in the registry.
+     * @param _key The key of the module in the registry.
+     * @param _module The module to set the state of.
      */
-    function setPermission(Reference memory _reference) external {
-        /// @dev Build the reference key of the function.
-        bytes32 referenceKey = _referenceKey(_reference);
-
-        /// @dev Save the function as permission-gated.
-        references[msg.sender][referenceKey] = _reference;
-    }
-
-    /**
-     * @dev Set a function as public and not gated by any measure.
-     * @param _reference The reference to the function.
-     * @param _public True if the function is public, false otherwise.
-     */
-    function setPublicPermission(Reference memory _reference, bool _public)
+    function setModule(bytes32 _key, NBadgeAuthority _module)
         external
+        requiresAuth(ADMIN)
     {
-        /// @dev Build the reference key of the function.
-        bytes32 referenceKey = _referenceKey(_reference);
-
-        /// @dev Save the function as public.
-        references[msg.sender][referenceKey].permission.isPublic = _public;
+        /// @dev Set the module-state in the registry.
+        _setModule(_key, _module);
     }
 
     ////////////////////////////////////////////////////////
@@ -74,85 +54,57 @@ contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ////////////////////////////////////////////////////////
 
     /**
-     * See {INBadgeAuthority-canCall (full)}.
+     * See {NBadgeAuthority-canCall (full)}.
      */
     function canCall(
         address _caller,
         address _sender,
         address _target,
-        bytes4 _sig,
-        bytes32 _key
+        bytes calldata _constitution
     ) public view override returns (bool can) {
-        /// @dev Get the reference key of the permission used.
-        bytes32 referenceKey = _keyReference(_sender, _target, _sig, _key);
-
-        /// @dev Retrieve the reference out of storage.
-        Reference memory permissionReference = references[_sender][
-            referenceKey
-        ];
+        (bytes32 moduleKey, bytes memory moduleConstitution) = abi.decode(
+            _constitution,
+            (bytes32, bytes)
+        );
 
         /// @dev Confirm the permissions through the registry modules.
-        can = (permissionReference.permission.isPublic ||
-            permissionReference.permission.module.canCall(
-                _caller,
-                _target,
-                _sig,
-                _key
-            ));
+        can = modules[moduleKey].canCall(
+            _caller,
+            _sender,
+            _target,
+            moduleConstitution
+        );
     }
 
     /**
-     * See {INBadgeAuthority-canCall (overloaded)}.
+     * See {NBadgeAuthority-canCall (overloaded)}.
      */
     function canCall(
         address _caller,
         address _target,
-        bytes4 _sig,
-        bytes32 _key
+        bytes calldata _constitution
     ) public view override returns (bool can) {
         /// @dev Call the built overloaded function.
-        can = canCall(_caller, msg.sender, _target, _sig, _key);
+        can = canCall(_caller, msg.sender, _target, _constitution);
     }
 
     ////////////////////////////////////////////////////////
-    ///                INTERNAL GETTERS                  ///
+    ///                INTERNAL SETTERS                  ///
     ////////////////////////////////////////////////////////
 
     /**
-     * @dev Build the reference key of a permission.
-     * @param _sender The sender (the contract of the policy) of the permission.
-     * @param _target The target contract of the permission.
-     * @param _sig The signature of the permission.
-     * @param _key The key of the permission in the schema.
-     * @return key The reference key of the permission.
+     * @dev Set the module-state in the registry.
+     * @param _key The key of the module in the registry.
+     * @param _module The module to set the state of.
      */
-    function _keyReference(
-        address _sender,
-        address _target,
-        bytes4 _sig,
-        bytes32 _key
-    ) internal pure returns (bytes32) {
-        /// @dev Build the hash that is used to store the reference.
-        return keccak256(abi.encode(_sender, _target, _sig, _key));
-    }
+    function _setModule(bytes32 _key, NBadgeAuthority _module) internal {
+        /// @dev Get the previous module-state.
+        NBadgeAuthority prevModule = modules[_key];
 
-    /**
-     * @dev Build the reference key of a permission.
-     * @param _reference The reference to the permission.
-     * @return key The reference key of the permission.
-     */
-    function _referenceKey(Reference memory _reference)
-        internal
-        view
-        returns (bytes32)
-    {
-        /// @dev Determine what the key for the refernece is.
-        return
-            _keyReference(
-                msg.sender,
-                _reference.target,
-                _reference.sig,
-                _reference.key
-            );
+        /// @dev Set the module-state in the registry.
+        modules[_key] = _module;
+
+        /// @dev Emit the module change event.
+        emit ModuleChanged(msg.sender, prevModule, _module);
     }
 }

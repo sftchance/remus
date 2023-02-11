@@ -7,6 +7,7 @@ auth
 ├─ ✅ BadgeAccessControl - "Variant of OpenZeppelin AccessControl using ERC1155 Badges."
 ├─ ✅ Fingerprint - "Access control powered by fingerprinted tokens."
 ├─ 🚨 NBadgeAuth - "Access control powered by complex uses of ERC1155 Badges."
+├─ 🚨 NBadgeModule - "Extendable framework for creating a plug-and-play registry access module."
 ├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
 ├─ extensions
 |  ├─ ✅ NBadgeIdPacked - "Gating by multiple token ids of a single Badge collection."

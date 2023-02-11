@@ -4,30 +4,23 @@ pragma solidity ^0.8.17;
 
 abstract contract NBadgeAuth {
     ////////////////////////////////////////////////////////
-    ///                      SCHEMA                      ///
-    ////////////////////////////////////////////////////////
-
-    /// @dev Schema of a permission configuration defintion.
-    struct Constitution {
-        bytes schema;
-        bytes admin;
-    }
-
-    ////////////////////////////////////////////////////////
     ///                      STATE                       ///
     ////////////////////////////////////////////////////////
 
     /// @dev The default permission key.
-    bytes32 public constant DEFAULT_ADMIN_KEY = 0x00;
+    bytes32 public constant ADMIN = 0x00;
 
     /// @dev The owner of this local contract.
     address public owner;
 
-    /// @dev The authority contract that contains the application logic.
+    /// @dev The `NBadgeAuthority` used to manage the access to this contract.
     NBadgeAuthority public authority;
 
     /// @dev Establish the constitutional permissions at the key-level.
-    mapping(bytes32 => Constitution) public constitutions;
+    /// @notice The `constitution` is a still-encoded representation of the
+    ///         configured permissions so that the consuming module can decode
+    ///         it appropriately without standardizing on a single encoding.
+    mapping(bytes32 => bytes) public constitutions;
 
     ////////////////////////////////////////////////////////
     ///                     EVENTS                       ///
@@ -64,13 +57,29 @@ abstract contract NBadgeAuth {
     ////////////////////////////////////////////////////////
 
     /**
+     * @dev Restrict a function to only admins.
+     */
+    modifier requiresAdmin() {
+        /// @dev Determine if this user is authorized to make this call.
+        /// @notice We check the owner first in case the authority is not set,
+        ///         using an exceptional amount of gas or is reverting to enable
+        ///         overriding even in the case of a bad authority.
+        require(
+            msg.sender == owner ||
+                authority.canCall(msg.sender, address(this), constitutions[ADMIN]),
+            "BadgeAuth: Not authorized to call this function."
+        );
+        _;
+    }
+
+    /**
      * @dev Restrict a function to only authorized callers.
      * @param _key The key to use for the authorization check.
      */
     modifier requiresAuth(bytes32 _key) {
         /// @dev Determine if this user is authorized to make this call.
         require(
-            _isAuthorized(msg.sender, msg.sig, _key),
+            _isAuthorized(msg.sender, _key),
             "BadgeAuth: Not authorized to call this function."
         );
         _;
@@ -81,41 +90,35 @@ abstract contract NBadgeAuth {
     ////////////////////////////////////////////////////////
 
     /**
-     * @dev Set the authority of this contract.
+     * @dev Set the NBadgeAuthority contract used for enforcement.
      * @param _authority The new authority of this contract.
-     * @param _key The key to use for the authorization check.
      */
-    function setAuthority(NBadgeAuthority _authority, bytes32 _key)
+    function setAuthority(NBadgeAuthority _authority)
         public
         virtual
+        requiresAdmin
     {
-        // TODO: Fix this.
-        require(
-            msg.sender == owner ||
-                authority.canCall(msg.sender, address(this), msg.sig, _key),
-            "BadgeAuth: Not authorized to set the authority."
-        );
-
         _setAuthority(_authority);
     }
 
-    function setSchema(bytes32 _key, bytes memory _schema)
+    /**
+     * @dev Set the constitution for a permission key.
+     * @param _key The key to set the constitution for.
+     * @param _constitution The constitution to set for the key.
+     */
+    function setConstitution(bytes32 _key, bytes calldata _constitution)
         public
         virtual
-        requiresAuth(DEFAULT_ADMIN_KEY)
+        requiresAdmin
     {
-        _setSchema(_key, _schema);
+        _setConstitution(_key, _constitution);
     }
 
     /**
      * @dev Set the owner of this contract.
      * @param _owner The new owner of this contract.
      */
-    function transferOwnership(address _owner)
-        public
-        virtual
-        requiresAuth(DEFAULT_ADMIN_KEY)
-    {
+    function transferOwnership(address _owner) public virtual requiresAdmin {
         _setOwner(_owner);
     }
 
@@ -128,8 +131,10 @@ abstract contract NBadgeAuth {
      * @param _owner The new owner of this contract.
      */
     function _setOwner(address _owner) internal {
+        /// @dev Set the new owner of the contract.
         owner = _owner;
 
+        /// @dev Announce the ownership change.
         emit OwnershipTransferred(msg.sender, _owner);
     }
 
@@ -139,26 +144,43 @@ abstract contract NBadgeAuth {
      *                  authority checks.
      */
     function _setAuthority(NBadgeAuthority _authority) internal {
+        /// @dev Set the new authority of the contract.
         authority = _authority;
 
+        /// @dev Announce the authority change.
         emit AuthorityChanged(msg.sender, _authority);
     }
 
-    function _setSchema(bytes32 _key, bytes memory _schema) internal {
-        schemas[_key] = _schema;
+    /**
+     * @dev Set the constitution for a permission key.
+     * @param _key The key to set the constitution for.
+     * @param _constitution The constitution to set for the key.
+     */
+    function _setConstitution(bytes32 _key, bytes calldata _constitution)
+        internal
+    {
+        /// @dev Set the new schema for the key.
+        constitutions[_key] = _constitution;
 
-        emit SchemaChanged(msg.sender, _key, _schema);
+        /// @dev Announce the schema change.
+        emit SchemaChanged(msg.sender, _key, _constitution);
     }
 
     ////////////////////////////////////////////////////////
     ///                 INTERNAL GETTERS                 ///
     ////////////////////////////////////////////////////////
 
-    function _isAuthorized(
-        address _caller,
-        bytes4 _sig,
-        bytes32 _key
-    ) internal view returns (bool) {
+    /**
+     * @dev Determine if the user is authorized to make this call.
+     * @param _caller The user making the call.
+     * @param _key The key to use for the authorization check.
+     * @return True if the user is authorized to make this call, false otherwise.
+     */
+    function _isAuthorized(address _caller, bytes32 _key)
+        internal
+        view
+        returns (bool)
+    {
         /// @dev Pull the authority out of storage.
         NBadgeAuthority auth = authority;
 
@@ -166,9 +188,26 @@ abstract contract NBadgeAuth {
         /// @notice Must pass the authority check or be the `owner`.
         return
             (address(auth) != address(0) &&
-                auth.canCall(_caller, address(this), _sig, _key)) ||
+                auth.canCall(_caller, address(this), constitutions[_key])) ||
             _caller == owner;
     }
+}
+
+interface Badge {
+    ////////////////////////////////////////////////////////
+    ///                     GETTERS                      ///
+    ////////////////////////////////////////////////////////
+
+    /**
+     * @dev Get the balance of a token for a user.
+     * @param _owner The user to get the balance for.
+     * @param _id The token to get the balance for.
+     * @return The balance of the token for the user.
+     */
+    function balanceOf(address _owner, uint256 _id)
+        external
+        view
+        returns (uint256);
 }
 
 interface NBadgeAuthority {
@@ -178,7 +217,6 @@ interface NBadgeAuthority {
 
     /// @dev A permission to access a function.
     struct Permission {
-        bool isPublic;
         NBadgeAuthority module;
         bytes config;
     }
@@ -204,30 +242,26 @@ interface NBadgeAuthority {
      * @param _caller The user who is trying to access the function.
      * @param _sender The source contract of the transaction.
      * @param _target The target contract of the function (optional).
-     * @param _sig The signature of the function (optional).
-     * @param _key The key of the permission in the schema (optional).
+     * @param _constitution The key of the permission in the schema (optional).
      * @return can True if the user has permission, false otherwise.
      */
     function canCall(
         address _caller,
         address _sender,
         address _target,
-        bytes4 _sig,
-        bytes32 _key
+        bytes memory _constitution
     ) external view returns (bool);
 
     /**
      * @dev Determine if a user has permission to access a function.
      * @param _caller The user who is trying to access the function.
      * @param _target The target contract of the function (optional).
-     * @param _sig The signature of the function (optional).
-     * @param _key The key of the permission in the schema (optional).
+     * @param _constitution The key of the permission in the schema (optional).
      * @return can True if the user has permission, false otherwise.
      */
     function canCall(
         address _caller,
         address _target,
-        bytes4 _sig,
-        bytes32 _key
+        bytes memory _constitution
     ) external view returns (bool);
 }
