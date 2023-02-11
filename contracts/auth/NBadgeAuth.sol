@@ -3,7 +3,12 @@
 pragma solidity ^0.8.17;
 
 abstract contract NBadgeAuth {
-    struct SchemaDecleration {
+    ////////////////////////////////////////////////////////
+    ///                      SCHEMA                      ///
+    ////////////////////////////////////////////////////////
+
+    /// @dev Schema of a permission configuration defintion.
+    struct Constitution {
         bytes schema;
         bytes admin;
     }
@@ -12,16 +17,17 @@ abstract contract NBadgeAuth {
     ///                      STATE                       ///
     ////////////////////////////////////////////////////////
 
+    /// @dev The default permission key.
+    bytes32 public constant DEFAULT_ADMIN_KEY = 0x00;
+
     /// @dev The owner of this local contract.
     address public owner;
 
     /// @dev The authority contract that contains the application logic.
     NBadgeAuthority public authority;
 
-    /// @dev Associates a permission key to a permission schema.
-    mapping(bytes32 => bytes) public schemas;
-
-    bytes32 public constant DEFAULT_ADMIN_KEY = 0x00;
+    /// @dev Establish the constitutional permissions at the key-level.
+    mapping(bytes32 => Constitution) public constitutions;
 
     ////////////////////////////////////////////////////////
     ///                     EVENTS                       ///

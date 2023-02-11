@@ -4,7 +4,7 @@ When Romulus and Remus became adults, they decided to found a city where the wol
 
 ```ml
 auth
-├─ ✅ BadgeAccessControl - "Variant of AccessControl using ERC1155 Badges."
+├─ ✅ BadgeAccessControl - "Variant of OpenZeppelin AccessControl using ERC1155 Badges."
 ├─ ✅ Fingerprint - "Access control powered by fingerprinted tokens."
 ├─ 🚨 NBadgeAuth - "Access control powered by complex uses of ERC1155 Badges."
 ├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
