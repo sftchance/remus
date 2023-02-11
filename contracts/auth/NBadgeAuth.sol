@@ -3,6 +3,11 @@
 pragma solidity ^0.8.17;
 
 abstract contract NBadgeAuth {
+    struct SchemaDecleration {
+        bytes schema;
+        bytes admin;
+    }
+
     ////////////////////////////////////////////////////////
     ///                      STATE                       ///
     ////////////////////////////////////////////////////////
@@ -12,6 +17,11 @@ abstract contract NBadgeAuth {
 
     /// @dev The authority contract that contains the application logic.
     NBadgeAuthority public authority;
+
+    /// @dev Associates a permission key to a permission schema.
+    mapping(bytes32 => bytes) public schemas;
+
+    bytes32 public constant DEFAULT_ADMIN_KEY = 0x00;
 
     ////////////////////////////////////////////////////////
     ///                     EVENTS                       ///
@@ -24,6 +34,13 @@ abstract contract NBadgeAuth {
     event AuthorityChanged(
         address indexed user,
         NBadgeAuthority indexed newAuthority
+    );
+
+    /// @dev Announces when the schema changes.
+    event SchemaChanged(
+        address indexed user,
+        bytes32 indexed key,
+        bytes schema
     );
 
     ////////////////////////////////////////////////////////
@@ -66,6 +83,7 @@ abstract contract NBadgeAuth {
         public
         virtual
     {
+        // TODO: Fix this.
         require(
             msg.sender == owner ||
                 authority.canCall(msg.sender, address(this), msg.sig, _key),
@@ -75,15 +93,22 @@ abstract contract NBadgeAuth {
         _setAuthority(_authority);
     }
 
+    function setSchema(bytes32 _key, bytes memory _schema)
+        public
+        virtual
+        requiresAuth(DEFAULT_ADMIN_KEY)
+    {
+        _setSchema(_key, _schema);
+    }
+
     /**
      * @dev Set the owner of this contract.
      * @param _owner The new owner of this contract.
-     * @param _key The key to use for the authorization check.
      */
-    function transferOwnership(address _owner, bytes32 _key)
+    function transferOwnership(address _owner)
         public
         virtual
-        requiresAuth(_key)
+        requiresAuth(DEFAULT_ADMIN_KEY)
     {
         _setOwner(_owner);
     }
@@ -113,6 +138,12 @@ abstract contract NBadgeAuth {
         emit AuthorityChanged(msg.sender, _authority);
     }
 
+    function _setSchema(bytes32 _key, bytes memory _schema) internal {
+        schemas[_key] = _schema;
+
+        emit SchemaChanged(msg.sender, _key, _schema);
+    }
+
     ////////////////////////////////////////////////////////
     ///                 INTERNAL GETTERS                 ///
     ////////////////////////////////////////////////////////
@@ -132,7 +163,6 @@ abstract contract NBadgeAuth {
                 auth.canCall(_caller, address(this), _sig, _key)) ||
             _caller == owner;
     }
-
 }
 
 interface NBadgeAuthority {
