@@ -113,15 +113,15 @@ abstract contract BadgeAccessControl {
         virtual
     {
         /// @dev Pull the role out of storage.
-        RoleData storage role = _roles[_role];
+        BadgeData memory badge = _roles[_role].badge;
 
         /// @dev Determine if the badge being used has changed.
-        if (!_equals(role.badge, _badge)) {
+        if (!_equals(badge, _badge)) {
             /// @dev Set the role's badge.
             _roles[_role].badge = _badge;
 
             /// @dev Announce the badge change.
-            emit RoleBadgeChanged(_role, role.badge, _badge);
+            emit RoleBadgeChanged(_role, badge, _badge);
         }
     }
 
