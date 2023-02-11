@@ -8,7 +8,7 @@ import {NBadgeModule} from "./NBadgeModule.sol";
 
 /// @notice Drives an authentication framework using many collections, many token ids, required balances
 ///         while having the ability to make some badges mandatory.
-/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/extensions/NBadgeMultiBalance.sol)
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/modules/NBadgeMultiBalance.sol)
 contract NBadgeMultiBalance is NBadgeModule {
     ////////////////////////////////////////////////////////
     ///                      SCHEMA                      ///

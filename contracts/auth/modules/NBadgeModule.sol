@@ -4,6 +4,9 @@ pragma solidity ^0.8.17;
 
 import {NBadgeAuthority} from "../NBadgeAuth.sol";
 
+/// @notice Plug-and-play framework for the NBadge Registry powering the usage of
+///         shared-network access policies across protocols and networks.
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/modules/NBadgeModule.sol)
 abstract contract NBadgeModule is NBadgeAuthority {
     ////////////////////////////////////////////////////////
     ///                     GETTERS                      ///

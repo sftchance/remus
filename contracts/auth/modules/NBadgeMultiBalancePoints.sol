@@ -8,7 +8,7 @@ import {NBadgeModule} from "./NBadgeModule.sol";
 
 /// @notice Drives an authentication framework using many collections and optional token ids
 ///         to create a cumulative points system.
-/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/extensions/NBadgeMultiBalancePoints.sol)
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/modules/NBadgeMultiBalancePoints.sol)
 contract NBadgeMultiBalancePoints is NBadgeModule {
     ////////////////////////////////////////////////////////
     ///                      SCHEMA                      ///
