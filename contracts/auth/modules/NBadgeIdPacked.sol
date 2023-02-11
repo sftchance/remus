@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 /// @dev Core dependencies.
 import {Badge} from "../NBadgeAuth.sol";
-import {NBadgeModule} from "../NBadgeModule.sol";
+import {NBadgeModule} from "./NBadgeModule.sol";
 
 /// @notice Drives an authentication framework on a single collection with multiple token ids.
 /// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/extensions/NBadgeIdPacked.sol)

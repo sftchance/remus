@@ -7,12 +7,15 @@ auth
 ├─ ✅ BadgeAccessControl - "Variant of OpenZeppelin AccessControl using ERC1155 Badges."
 ├─ ✅ Fingerprint - "Access control powered by fingerprinted tokens."
 ├─ 🚨 NBadgeAuth - "Access control powered by complex uses of ERC1155 Badges."
-├─ 🚨 NBadgeModule - "Extendable framework for creating a plug-and-play registry access module."
 ├─ 🚨 NBadgeRegistry - "Public access registry powering Badged credentials with simple inheritance."
 ├─ extensions
+|  ├─ 🚨 NBadgeAuthNetworkEndpoint - "Access control powered by complex uses of ERC1155 Badges."
+|  ├─ 🚨 NBadgeAuthNetworkGovernor - "Access control powered by complex uses of ERC1155 Badges."
+├─ modules
+|  ├─ 🚨 NBadgeModule - "Extendable framework for creating a plug-and-play registry access module."
 |  ├─ ✅ NBadgeIdPacked - "Gating by multiple token ids of a single Badge collection."
 |  ├─ ✅ NBadgeMultiBalance - "Simple gating by a cumulative balance of Badges held."
-|  ├─ ✅ NBadgeMultiBalancePoints - "Complex gating by a cumulative point-driven system based on Badges held."
+|  ├─ 🚨 NBadgeMultiBalancePoints - "Complex gating by a cumulative point-driven system based on Badges held."
 math
 ├─ ⏳ MathlessCurves - "Shapeless curves for the EVM using Fourier series."
 metatx
