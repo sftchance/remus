@@ -14,13 +14,12 @@ contract NBadgeMultiBalance is NBadgeModule {
     ///                      SCHEMA                      ///
     ////////////////////////////////////////////////////////
 
-    /// @dev The schema of node in the authority graph.
-    struct Node {
-        Badge badge;
-        uint8 mandatory;
-        uint256 id;
-        uint256 balance;
-    }
+    // struct Node {
+    //     Badge badge;
+    //     uint256 a -> mandatory;
+    //     uint256 b -> id;
+    //     uint256 c -> balance;
+    // }
 
     ////////////////////////////////////////////////////////
     ///                INTERNAL GETTERS                  ///
@@ -53,6 +52,7 @@ contract NBadgeMultiBalance is NBadgeModule {
         address,
         bytes calldata _constitution
     ) internal view override returns (bool) {
+        /// @dev Decode the constitution.
         (Node[] memory nodes, uint256 required) = _decode(_constitution);
 
         /// @dev Load in the stack.
@@ -68,10 +68,10 @@ contract NBadgeMultiBalance is NBadgeModule {
             node = nodes[i];
 
             /// @dev If the user has sufficient balance, account for 1 carried.
-            if (node.badge.balanceOf(_user, node.id) >= node.balance)
+            if (node.badge.balanceOf(_user, node.b) >= node.c)
                 carried++;
                 /// @dev If the node is required and balance is insufficient, we can't continue.
-            else if (node.mandatory == 1) return false;
+            else if (node.a == 1) return false;
 
             /// @dev Keep on swimming.
         }

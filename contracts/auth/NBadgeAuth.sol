@@ -215,6 +215,14 @@ interface NBadgeAuthority {
     ///                     SCHEMA                       ///
     ////////////////////////////////////////////////////////
 
+    /// @dev A node in the authority graph.
+    struct Node { 
+        Badge badge;
+        uint256 a;
+        uint256 b;
+        uint256 c;
+    }
+
     /// @dev A permission to access a function.
     struct Permission {
         NBadgeAuthority module;

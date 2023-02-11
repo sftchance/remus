@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-import {NBadgeAuthority} from "./NBadgeAuth.sol";
+import {NBadgeAuthority} from "../NBadgeAuth.sol";
 
 abstract contract NBadgeModule is NBadgeAuthority {
     ////////////////////////////////////////////////////////

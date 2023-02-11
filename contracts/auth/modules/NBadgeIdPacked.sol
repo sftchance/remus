@@ -10,29 +10,32 @@ import {NBadgeModule} from "./NBadgeModule.sol";
 /// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/extensions/NBadgeIdPacked.sol)
 contract NBadgeIdPacked is NBadgeModule {
     ////////////////////////////////////////////////////////
+    ///                      SCHEMA                      ///
+    ////////////////////////////////////////////////////////
+
+    // struct Node {
+    //     Badge badge;
+    //     uint256 a -> nodeIds;
+    //     uint256 b -> nodeSize;
+    //     uint256 c -> nodeMask;
+    // }
+
+    ////////////////////////////////////////////////////////
     ///                INTERNAL GETTERS                  ///
     ////////////////////////////////////////////////////////
 
     /**
      * @dev Decode the constitution.
      * @param _constitution The encoded schema of the permission definition.
-     * @return badge The badge contract.
-     * @return nodeIds The node ids.
-     * @return nodeSize The node size.
-     * @return nodeMask The node mask.
+     * @return node The authority node being enforced.
      */
     function _decode(bytes calldata _constitution)
         internal
         pure
-        returns (
-            Badge badge,
-            uint256 nodeIds,
-            uint256 nodeSize,
-            uint256 nodeMask
-        )
+        returns (Node memory)
     {
         /// @dev Decode the constitution.
-        return abi.decode(_constitution, (Badge, uint256, uint256, uint256));
+        return abi.decode(_constitution, (Node));
     }
 
     /**
@@ -48,20 +51,15 @@ contract NBadgeIdPacked is NBadgeModule {
         bytes calldata _constitution
     ) internal view override returns (bool) {
         /// @dev Decode the constitution.
-        (
-            Badge badge,
-            uint256 nodeIds,
-            uint256 nodeSize,
-            uint256 nodeMask
-        ) = _decode(_constitution);
+        (Node memory node) = _decode(_constitution); 
 
         /// @dev Load the stack.
-        uint256 i = nodeIds;
+        uint256 i = node.a;
 
         /// @dev Iterate through the node ids.
-        for (i; i != 0; i >>= nodeSize) {
+        for (i; i != 0; i >>= node.b) {
             /// @dev Check if the user has the required badge.
-            if (badge.balanceOf(_user, i & nodeMask) == 0) return false;
+            if (node.badge.balanceOf(_user, i & node.c) == 0) return false;
         }
 
         /// @dev The user has the required credentials.
