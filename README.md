@@ -18,7 +18,7 @@ auth
 math
 ├─ ⏳ MathlessCurves - "Shapeless curves for the EVM using Fourier series."
 metatx
-├─ ⏳ BadgingForwarder - "Forwarder contract that mints a Badge upon transaction execution."
+├─ ✅ BadgingForwarder - "Forwarder contract that mints a Badge upon transaction execution."
 tokens
 ├─ ERC20
 |  ├─ ⏳ ERC20Generational - "Birth and death to emulate culture volatility."
