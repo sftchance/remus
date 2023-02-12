@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.17;
 
-/// @notice NBadge is an access scheme consuming and producing complex-in-definition access 
+/// @notice NBadge is an access scheme consuming and producing complex-in-definition access
 ///         policies using the power of exogenous ERC1155 badges.
 /// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/NBadgeAuth.sol)
 abstract contract NBadgeAuth {
@@ -72,7 +72,7 @@ abstract contract NBadgeAuth {
                 authority.canCall(
                     msg.sender,
                     _getAddress(),
-                    constitutions[ADMIN]
+                    _getConstitution(ADMIN)
                 ),
             "BadgeAuth: Not authorized to call this function."
         );
@@ -127,6 +127,24 @@ abstract contract NBadgeAuth {
      */
     function transferOwnership(address _owner) public virtual requiresAdmin {
         _setOwner(_owner);
+    }
+
+    ////////////////////////////////////////////////////////
+    ///                     GETTERS                      ///
+    ////////////////////////////////////////////////////////
+
+    /**
+     * @dev Get the constitution of a certain key depending on the configuration.
+     * @param _key The key to get the constitution for.
+     * @return The constitution for the key.
+     */
+    function getConstitution(bytes32 _key)
+        public
+        view
+        virtual
+        returns (bytes memory)
+    {
+        return _getConstitution(_key);
     }
 
     ////////////////////////////////////////////////////////
@@ -186,6 +204,19 @@ abstract contract NBadgeAuth {
     }
 
     /**
+     * @dev Get the constitution for a permission key.
+     * @param _key The key to get the constitution for.
+     * @return The constitution for the key.
+     */
+    function _getConstitution(bytes32 _key)
+        internal
+        view
+        returns (bytes memory)
+    {
+        return constitutions[_key];
+    }
+
+    /**
      * @dev Determine if the user is authorized to make this call.
      * @param _caller The user making the call.
      * @param _key The key to use for the authorization check.
@@ -203,7 +234,7 @@ abstract contract NBadgeAuth {
         /// @notice Must pass the authority check or be the `owner`.
         return
             (address(auth) != address(0) &&
-                auth.canCall(_caller, _getAddress(), constitutions[_key])) ||
+                auth.canCall(_caller, _getAddress(), _getConstitution(_key))) ||
             _caller == owner;
     }
 }

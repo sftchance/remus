@@ -57,6 +57,7 @@ abstract contract NBadgeAuthConsumer is NBadgeAuth {
         external
         requiresAdmin
     {
+        /// @dev Update the address that has managed the constitutional amendments.
         _setNetworkGovernor(_networkGovernor);
     }
 
@@ -96,10 +97,24 @@ abstract contract NBadgeAuthConsumer is NBadgeAuth {
     ////////////////////////////////////////////////////////
 
     /**
-     * @dev Get the address of this contract.
-     * @return The address of this contract.
+     * @dev Get the permission look-up address of this contract.
+     * @return The address of the contract being used as a governor.
      */
     function _getAddress() internal view override returns (address) {
         return networkGovernor;
+    }
+
+    /**
+     * @dev Get the constitution for a permission key.
+     * @param _key The key to get the constitution for.
+     * @return The constitution for the key.
+     */
+    function _getConstitution(bytes32 _key)
+        internal
+        view
+        override
+        returns (bytes memory)
+    {
+        return NBadgeAuth(networkGovernor).constitutions(_key);
     }
 }
