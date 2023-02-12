@@ -2,6 +2,9 @@
 
 pragma solidity ^0.8.17;
 
+/// @notice NBadge is an access scheme consuming and producing complex-in-definition access 
+///         policies using the power of exogenous ERC1155 badges.
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/NBadgeAuth.sol)
 abstract contract NBadgeAuth {
     ////////////////////////////////////////////////////////
     ///                      STATE                       ///
@@ -66,7 +69,11 @@ abstract contract NBadgeAuth {
         ///         overriding even in the case of a bad authority.
         require(
             msg.sender == owner ||
-                authority.canCall(msg.sender, address(this), constitutions[ADMIN]),
+                authority.canCall(
+                    msg.sender,
+                    _getAddress(),
+                    constitutions[ADMIN]
+                ),
             "BadgeAuth: Not authorized to call this function."
         );
         _;
@@ -171,6 +178,14 @@ abstract contract NBadgeAuth {
     ////////////////////////////////////////////////////////
 
     /**
+     * @dev Get the address of this contract.
+     * @return The address of this contract.
+     */
+    function _getAddress() internal view returns (address) {
+        return address(this);
+    }
+
+    /**
      * @dev Determine if the user is authorized to make this call.
      * @param _caller The user making the call.
      * @param _key The key to use for the authorization check.
@@ -188,7 +203,7 @@ abstract contract NBadgeAuth {
         /// @notice Must pass the authority check or be the `owner`.
         return
             (address(auth) != address(0) &&
-                auth.canCall(_caller, address(this), constitutions[_key])) ||
+                auth.canCall(_caller, _getAddress(), constitutions[_key])) ||
             _caller == owner;
     }
 }
@@ -216,7 +231,7 @@ interface NBadgeAuthority {
     ////////////////////////////////////////////////////////
 
     /// @dev A node in the authority graph.
-    struct Node { 
+    struct Node {
         Badge badge;
         uint256 a;
         uint256 b;

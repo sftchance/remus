@@ -5,6 +5,10 @@ pragma solidity ^0.8.17;
 /// @dev Core dependencies.
 import {NBadgeAuth, NBadgeAuthority} from "./NBadgeAuth.sol";
 
+/// @notice A permissionless Registry protocol enabling the use of extendable
+///         NBadge access modules without writing custom logic or having to pay
+///         for the deployment of the enforcement mechanisms on every chain.
+/// @author Remus (https://github.com/nftchance/remus/blob/main/src/auth/NBadgeRegistry.sol)
 contract NBadgeRegistry is NBadgeAuth, NBadgeAuthority {
     ////////////////////////////////////////////////////////
     ///                     STATE                        ///

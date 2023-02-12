@@ -6,11 +6,10 @@ When Romulus and Remus became adults, they decided to found a city where the wol
 auth
 ├─ ✅ BadgeAccessControl - "Variant of OpenZeppelin AccessControl using ERC1155 Badges."
 ├─ ✅ Fingerprint - "Access control powered by fingerprinted ERC721 tokens."
-├─ 🚨 NBadgeAuth - "On-chain access control powered by complex uses of ERC1155 Badges."
-├─ 🚨 NBadgeRegistry - "Public shared-access registry powering Badged credentials with simple inheritance."
+├─ ✅ NBadgeAuth - "On-chain access control powered by complex uses of ERC1155 Badges."
+├─ ✅ NBadgeRegistry - "Public shared-access registry powering Badged credentials with simple inheritance."
 ├─ extensions
-|  ├─ 🚨 NBadgeAuthNetworkEndpoint - "Localized consumer of a Governors NBadge permission constitutions."
-|  ├─ 🚨 NBadgeAuthNetworkGovernor - "Global network provider of NBadge permission constitutions."
+|  ├─ ✅ NBadgeAuthConsumer- "Localized consumer of a Network Governors NBadge permission constitutions."
 ├─ modules
 |  ├─ ✅ NBadgeModule - "Extendable framework for creating a plug-and-play registry access module."
 |  ├─ ✅ NBadgeIdPacked - "Gating by multiple token ids of a single Badge collection."
