@@ -23,7 +23,6 @@ tokens
 ├─ ERC20
 |  ├─ ⏳ ERC20Generational - "Birth and death to emulate culture volatility."
 ├─ ERC721
-|  ├─ ⏳ ERC721Explosive - "Explode an NFT into thousands of children NFTs with the ability to reassemble."
 |  ├─ ⏳ ERC721Hooked - "Non-fungible token with transfer-hooks enabling external state updates."
 |  ├─ ⏳ ERC721Mirror - "Ghost-ownership implementation to efficiently airdrop an entire ERC721 collection."
 |  ├─ ⏳ ERC721Receivable - "Mint tokens upon the receipt of ETH, ERC20, ERC721 or ERC1155."
