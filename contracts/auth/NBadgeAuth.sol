@@ -183,6 +183,7 @@ abstract contract NBadgeAuth {
      */
     function _setConstitution(bytes32 _key, bytes calldata _constitution)
         internal
+        virtual
     {
         /// @dev Set the new schema for the key.
         constitutions[_key] = _constitution;
@@ -199,7 +200,7 @@ abstract contract NBadgeAuth {
      * @dev Get the address of this contract.
      * @return The address of this contract.
      */
-    function _getAddress() internal view returns (address) {
+    function _getAddress() internal view virtual returns (address) {
         return address(this);
     }
 
@@ -211,6 +212,7 @@ abstract contract NBadgeAuth {
     function _getConstitution(bytes32 _key)
         internal
         view
+        virtual
         returns (bytes memory)
     {
         return constitutions[_key];
