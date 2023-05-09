@@ -1,6 +1,6 @@
 {
     "name": "@sftchance/remus",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "dependencies": {
         "@changesets/cli": "^2.26.1",
         "@ethersproject/abi": "^5.7.0",
