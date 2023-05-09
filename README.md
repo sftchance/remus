@@ -18,6 +18,7 @@ contracts
 ├─ lib
 |  ├─ ✅ LibColorRGB - "Library for working with RGB colors."
 ├─ math
+|  ├─ ⏳ MathlessCurves - "Shapeless curves for the EVM using Fourier series."
 ├─ metatx
 |  ├─ ✅ BadgingForwarder - "Forwarder contract that mints a Badge upon transaction execution."
 ```
