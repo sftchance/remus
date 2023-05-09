@@ -20,14 +20,6 @@ jobs:
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-          //npm.pkg.github.com/:_authToken=$AUTH_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Release Pull Request or Publish
         id: changesets
         uses: changesets/action@v1
