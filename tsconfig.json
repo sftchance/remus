@@ -5,6 +5,10 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["./scripts", "./test", "./src/types"],
+  "files": ["./hardhat.config.ts"]
 }

@@ -1,15 +1,45 @@
 {
-  "name": "hardhat-project",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@nomiclabs/hardhat-waffle": "^2.0.5",
-    "@openzeppelin/contracts": "^4.8.1",
-    "ethereum-waffle": "^3.4.4",
-    "ethers": "^5.7.2",
-    "hardhat": "^2.12.1-ir.0"
-  },
-  "scripts": {
-    "build": "npx hardhat compile && npx hardhat typechain && npx hardhat docgen"
-  }
+    "name": "@sftchance/remus",
+    "version": "0.0.1",
+    "dependencies": {
+        "@ethersproject/abi": "^5.7.0",
+        "@ethersproject/providers": "^5.7.2",
+        "ethers": "^5.7.2",
+        "wagmi": "^1.0.1"
+    },
+    "devDependencies": {
+        "@changesets/cli": "^2.26.1",
+        "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+        "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+        "@nomiclabs/hardhat-solhint": "^3.0.1",
+        "@wagmi/cli": "^1.0.1",
+        "chai": "^4.3.7",
+        "hardhat": "^2.12.1-ir.0",
+        "hardhat-gas-reporter": "^1.0.9",
+        "hardhat-packager": "^1.4.2",
+        "hardhat-tracer": "^2.2.2",
+        "mocha": "^10.2.0",
+        "shx": "^0.3.4"
+    },
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "clean": "shx rm -rf ./artifacts ./cache ./coverage ./coverage.json ./dist ./docs ./src/types ./src/hooks.ts ./tsconfig.prod.tsbuildinfo",
+        "clean:node_modules": "shx rm -rf ./node_modules",
+        "build": "pnpm wagmi generate && pnpm hardhat prepare-package",
+        "debug": "pnpm clean && pnpm hardhat coverage && REPORT_GAS=true pnpm hardhat test --fulltrace",
+        "test": "pnpm clean && pnpm hardhat test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sftchance/remus.git"
+    },
+    "files": [
+        "/src",
+        "CHANGELOG.md"
+    ],
+    "author": "sftchance",
+    "license": "AGPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/sftchance/remus/issues"
+    }
 }

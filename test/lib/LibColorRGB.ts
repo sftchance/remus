@@ -1,16 +1,14 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { ethers, waffle } from "hardhat";
-
-const { deployContract } = waffle;
-
-const LibColor = require("../../artifacts/contracts/lib/LibColorRGB.sol/LibColorRGB.json");
+import { ethers } from "hardhat";
 
 describe("LibColorRGB", function () {
     const deployLibraryFixture = async () => {
         const [owner, otherAccount] = await ethers.getSigners();
 
-        const library = await deployContract(owner, LibColor);
+        const Library = await ethers.getContractFactory("LibColorRGB");
+        const library = await Library.deploy();
+        await library.deployed();
 
         return { owner, otherAccount, library };
     };
@@ -76,7 +74,7 @@ describe("LibColorRGB", function () {
             );
         });
 
-        it("hexadecimal(0xFFFF00`)", async () => {
+        it("hexadecimal(0xFFFF00)", async () => {
             const { library } = await loadFixture(deployLibraryFixture);
 
             expect(await library.hexadecimal(0xffff00)).to.equal("FFFF00");

@@ -23,6 +23,12 @@ contracts
 |  ├─ ✅ BadgingForwarder - "Forwarder contract that mints a Badge upon transaction execution."
 ```
 
+## Commands
+
+- `pnpm audit`
+- `pnpm build`
+- `pnpm test`
+
 ## Safety
 
 This is experimental software and is provided on an "as is" and "as available" basis.
