@@ -27,7 +27,8 @@
         "clean:node_modules": "shx rm -rf ./node_modules",
         "build": "pnpm wagmi generate && pnpm hardhat prepare-package",
         "debug": "pnpm clean && pnpm hardhat coverage && REPORT_GAS=true pnpm hardhat test --fulltrace",
-        "test": "pnpm clean && pnpm hardhat test"
+        "test": "pnpm clean && pnpm hardhat test",
+        "ci": "pnpm test && pnpm build"
     },
     "repository": {
         "type": "git",
