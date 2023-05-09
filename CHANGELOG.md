@@ -1,5 +1,11 @@
 # @sftchance/remus
 
+## 0.0.4
+
+### Patch Changes
+
+- 392d177: Fix the use of registry
+
 ## 0.0.3
 
 ### Patch Changes
