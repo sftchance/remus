@@ -4,13 +4,13 @@ Remus is a collection of highly-opinionated EVM primitives for smart contract de
 
 **Without Remus, you would have to:**
 
-Without ts-reset:
+Without Remus:
 
 - 🚨 build the primitives of every protocol yourself.
 - 🤦 re-implement logic and code that's already been battle-tested.
 - 😡 spend more time writing code than architecting the model.
 
-ts-reset smooths over these hard edges, just like a CSS reset does in the browser.
+Remus makes the hard things easy and the easy things trivial. It's a way to write less code and unlock the power of ecosystem interoperability sooner without having to establish your own stack.
 
 **With Remus:**
 
