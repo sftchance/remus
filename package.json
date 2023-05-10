@@ -17,6 +17,7 @@
         "hardhat": "^2.12.1-ir.0",
         "hardhat-gas-reporter": "^1.0.9",
         "hardhat-packager": "^1.4.2",
+        "hardhat-spdx-license-identifier": "^2.1.0",
         "hardhat-tracer": "^2.2.2",
         "mocha": "^10.2.0",
         "shx": "^0.3.4"
@@ -26,7 +27,7 @@
         "clean": "shx rm -rf ./artifacts ./cache ./coverage ./coverage.json ./dist ./docs ./src/types ./src/hooks.ts ./tsconfig.prod.tsbuildinfo",
         "clean:node_modules": "shx rm -rf ./node_modules",
         "build": "pnpm wagmi generate && pnpm hardhat prepare-package",
-        "debug": "pnpm clean && pnpm hardhat coverage && REPORT_GAS=true pnpm hardhat test --fulltrace",
+        "dev": "pnpm clean && pnpm hardhat coverage && REPORT_GAS=true pnpm hardhat test --fulltrace",
         "test": "pnpm clean && pnpm hardhat test",
         "ci": "pnpm test && pnpm build",
         "release": "pnpm wagmi generate && pnpm hardhat prepare-package && changeset publish"

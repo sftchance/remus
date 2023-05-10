@@ -5,6 +5,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-packager";
 import "@nomiclabs/hardhat-solhint";
 import "hardhat-gas-reporter"
+import "hardhat-spdx-license-identifier"
 import "hardhat-tracer";
 
 const config: HardhatUserConfig = {
@@ -41,6 +42,10 @@ const config: HardhatUserConfig = {
     typechain: {
         outDir: 'src/types',
         target: 'ethers-v5',
+    },
+    spdxLicenseIdentifier: {
+        overwrite: true,
+        runOnCompile: true
     }
 };
 
