@@ -14,7 +14,6 @@ docs
 
 # Build outputs
 src/types
-hooks.ts
 
 # Files
 .DS_STORE

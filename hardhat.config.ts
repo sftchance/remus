@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
         showMethodSig: true,
     },
     typechain: {
-        outDir: 'src/types',
+        outDir: 'dist/types',
         target: 'ethers-v5',
     },
     spdxLicenseIdentifier: {

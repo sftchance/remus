@@ -3,7 +3,7 @@ import { defineConfig } from '@wagmi/cli'
 import { actions, hardhat, react } from '@wagmi/cli/plugins'
 
 export default defineConfig({
-    out: 'src/hooks.ts',
+    out: 'lib/hooks.ts',
     contracts: [],
     plugins: [
         actions({
@@ -11,7 +11,7 @@ export default defineConfig({
         }),
         hardhat({
             commands: {
-                clean: 'pnpm clean',
+                clean: 'pnpm hardhat clean',
                 build: 'pnpm hardhat compile',
                 rebuild: 'pnpm hardhat compile',
             },
